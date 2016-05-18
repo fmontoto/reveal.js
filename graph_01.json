@@ -1,0 +1,67 @@
+{
+    "nodes": [
+        {
+            "name": "V",
+            "group": 2,
+            "label": "V"
+        },
+        {
+            "name": "",
+            "group": 3
+        },
+        {
+            "name": "",
+            "group": 3
+        },
+        {
+            "name":"",
+            "group": 1
+        },
+        {
+            "name":"",
+            "group": 1
+        },
+        {
+            "name":"",
+            "group": 1
+        }
+    ],
+    "links": [
+        {
+            "source": 0,
+            "target": 1,
+            "value": 10
+        },
+        {
+            "source": 0,
+            "target": 2,
+            "value": 10
+        },
+        {
+            "source": 1,
+            "target": 2,
+            "value": 10
+        },
+        {
+            "source": 1,
+            "target": 5,
+            "value": 10
+        },
+        {
+            "source": 3,
+            "target": 4,
+            "value": 10
+        },
+        {
+            "source": 2,
+            "target": 3,
+            "value": 10
+        }
+    ],
+    "directed_links": [
+        {
+            "source": 0,
+            "target": 1
+        }
+    ]
+}

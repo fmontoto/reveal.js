@@ -15,10 +15,33 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <style type="text/css">
+            .node {
+                border-radius: 6px;
+                width: 12px;
+                height: 12px;
+                margin: -6px 0 0 -6px;
+                position: absolute;
+            }
+
+            .link {
+                position: absolute;
+                border-bottom: solid #DC0F0F 1px;
+                height: 0;
+                stroke: white;
+                -webkit-transform-origin: 0 0;
+                -moz-transform-origin: 0 0;
+                -ms-transform-origin: 0 0;
+                -o-transform-origin: 0 0;
+                transform-origin: 0 0;
+            }
+        </style>
+
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -32,6 +55,7 @@
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
+
 	</head>
 
 	<body>
@@ -70,22 +94,40 @@
 				</section>
 
 				<section>
-					<h2>Operaciones</h2>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$adj(G, v, u):$</span> Indica si existe un arco entre v y u; $(v, u) \in E$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$neigh(G, v):$</span> Retorna los de vecinos de v; $\lbrace u, (v, u) \in E\rbrace$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$rneigh(G, v):$</span> Retorna los vecinos inversos de v; $\lbrace u, (u, v) \in E\rbrace$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$outdegree(G, v):$</span> Retorna el n&uacute;mero de vecinos de v; $|neigh(G, v)|$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$indegree(G, v):$</span>Retorna el n&uacute;mero de vecinos inversos de v; $|rneigh(G, v)|$.
-                    </p>
+                    <section>
+                        <h2>Operaciones</h2>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$adj(G, v, u):$</span> Indica si existe un arco entre v y u; $(v, u) \in E$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$neigh(G, v):$</span> Retorna los de vecinos de v; $\lbrace u, (v, u) \in E\rbrace$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$rneigh(G, v):$</span> Retorna los vecinos inversos de v; $\lbrace u, (u, v) \in E\rbrace$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$outdegree(G, v):$</span> Retorna el n&uacute;mero de vecinos de v; $|neigh(G, v)|$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$indegree(G, v):$</span>Retorna el n&uacute;mero de vecinos inversos de v; $|rneigh(G, v)|$.
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Grafos no dirigidos</h2>
+                        <p style="text-align: left;" class="fragment">
+                            $(u, v) \in E \Rightarrow (v,u) \in E$. Pero solo uno de los dos se escribe expl&iacute;citamente.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $adj(G, v, u) = adj(G, u, v)$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $neigh(G, u) = rneigh(G, u)$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $degree(G, u) = |neigh(G, u) = |rneigh(G, u)|$.
+                        </p>
+                        <svg class="graph_01"></svg>
+                    </section>
 				</section>
 				<!-- Example of nested vertical slides -->
 				<section>
@@ -447,7 +489,86 @@ Reveal.addEventListener( 'customevent', function() {
 				]
 			});
 
-		</script>
+        </script>
+        <script src="lib/js/d3/d3.min.js"></script>
+
+        <script type="text/javascript">
+            // Generates the graphs
+
+            function load_graph(json, force, svg) {
+                var color = d3.scale.category20();
+                // define arrow markers for graph links
+                svg.append('svg:defs').append('svg:marker')
+                    .attr('id', 'end-arrow')
+                    .attr('viewBox', '-5 -5 10 10')
+                    .attr('refX', 6)
+                    .attr('markerWidth', 3)
+                    .attr('markerHeight', 3)
+                    .attr('orient', 'auto')
+                    .append('svg:path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#000');
+
+                svg.append('svg:defs')
+                    .append('svg:marker')
+                    .attr('id', 'start-arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 4)
+                    .attr('markerWidth', 3)
+                    .attr('markerHeight', 3)
+                    .attr('orient', 'auto')
+                    .append('svg:path')
+                        .attr('d', 'M10,-5L0,0L10,5')
+                        .attr('fill', 'red');
+
+                force.nodes(json.nodes)
+                    .links(json.links)
+                    .start();
+
+                var link = svg.selectAll("line.link")
+                    .data(json.links)
+                    .enter().append("line")
+                    .attr("class", "link")
+                    .style("stroke-width", function(d, i) { return Math.sqrt(d.value)})
+                    .style('marker-start', function(d, i) { return 'url(#start-arrow)'});
+
+                var node = svg.selectAll("circle.node")
+                    .data(json.nodes)
+                    .enter().append("circle")
+                    .attr("class", "node")
+                    .attr("r", 15)
+                    .style("fill", function(d) { return color(d.group); })
+                    .call(force.drag);
+
+                node.append("title")
+                    .text(function(d) { return d.name; });
+
+
+                force.on("tick", function() {
+                    link.attr("x1", function(d) { return d.source.x; })
+                        .attr("y1", function(d) { return d.source.y; })
+                        .attr("x2", function(d) { return d.target.x; })
+                        .attr("y2", function(d) { return d.target.y; });
+
+                    node.attr("cx", function(d) { return d.x; })
+                        .attr("cy", function(d) { return d.y; });
+
+                });
+            };
+                function generate_svg(name, width, height) {
+                    var graph_svg = d3.select(".".concat(name)).attr("width", width).attr("height", height);
+                    var force = d3.layout.force()
+                                        .charge(-190)
+                                        .linkDistance(90)
+                                        .linkStrength(1)
+                                        .size([width, height]);
+                    d3.json(name.concat(".json"), function(json) {
+                                load_graph(json, force, graph_svg);});
+                }
+                generate_svg('graph_01', 500, 500);
+
+
+        </script>
 
 	</body>
 </html>
