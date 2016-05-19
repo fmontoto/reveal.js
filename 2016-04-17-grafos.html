@@ -74,7 +74,7 @@
 				<section>
 					<h2>Definiciones</h2>
                     <p style="text-align: left;">
-						Un grafo es un set de nodos o v&eacute;rtices conectados de a pares por arcos o aristas.
+						Un grafo es un set de nodos o v&eacute;rtices conectados entre ellos por arcos o aristas.
 					</p>
                     <p class="fragment">
                         $G = (V, E)$
@@ -111,6 +111,9 @@
                         <p style="text-align: left;" class="fragment">
                             <span class="fragment highlight-green">$indegree(G, v):$</span>Retorna el n&uacute;mero de vecinos inversos de v; $|rneigh(G, v)|$.
                         </p>
+                        <p style="text-align: left;" class="fragment">
+                            <span class="fragment highlight-green">$neigh(G,v)[j]$ o $rneigh(G,v)[j]:$</span> Acceso al elemento.
+                        </p>
                     </section>
                     <section>
                         <h2>Grafos no dirigidos</h2>
@@ -124,11 +127,174 @@
                             $neigh(G, u) = rneigh(G, u)$.
                         </p>
                         <p style="text-align: left;" class="fragment">
-                            $degree(G, u) = |neigh(G, u) = |rneigh(G, u)|$.
+                            $degree(G, u) = |neigh(G, u)| = |rneigh(G, u)|$.
                         </p>
                         <svg class="graph_01"></svg>
                     </section>
-				</section>
+                </section>
+                <section>
+                    <h2>Entrop&iacute;a</h2>
+                    <p>
+                        <span class="fragment">$log \binom{n^2}{e}$</span>
+                        <span class="fragment">$\approx e \cdot log( \frac{n^2}{e}) + \mathcal{O}(e)$</span>
+                    </p>
+                    <p>
+                        <span class="fragment">Si hacemos $e = n^{1 + \alpha}, \alpha \in ]0,1[$</span>
+                        <br>
+                        <span class="fragment">$= (1 - \alpha)e \cdot log(n) + \mathcal{O}(e)$</span>
+                    </p>
+
+                </section>
+                <section>
+                    <section>
+                        <h2>Representaciones "Cl&aacute;sicas"</h2>
+                        <h3 class="fragment" style="text-align:left;">Lista de adyacencia</h3>
+                        <p style="text-align: left;" class="fragment">
+                            Asumamos $V = [1,n]$
+                        </p>
+
+                        <p class="fragment">
+                            $1 \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                        <p class="fragment">
+                            ...
+                            <br>
+                            $i \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                        <p class="fragment">
+                            ...
+                            <br>
+                            $n \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Lista de adyacencia</h2>
+                        <p style="text-align: left;" class="fragment">
+                            $N[1,e]:$
+                        </p>
+                        <style type="text/css">
+                            .fragment-t.fragment {border-collapse:collapse;border-spacing:0;}
+                            .fragment-t th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+                            .fragment-t tr{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+                            .tg .tg-yw4l{vertical-align:top}
+                        </style>
+                        <table class="fragment fragment-t">
+                            <tr>
+                                <th class="tg-031e">N(1)[0]</th>
+                                <th class="tg-031e">N(1)[1]</th>
+                                <th class="tg-031e">N(1)[...]</th>
+                                <th class="tg-031e">N(...)[...]</th>
+                                <th class="tg-yw4l">N(i)[0]</th>
+                                <th class="tg-yw4l">N(i)[...]</th>
+                                <th class="tg-yw4l">N(n)[0]</th>
+                                <th class="tg-yw4l">N(n)[...]</th>
+                            </tr>
+                        </table>
+                        <p style="text-align: left;" class="fragment">
+                            $V[1,n+1]:$
+                        </p>
+                        <table class="fragment fragment-t">
+                            <tr>
+                                <th class="tg-031e">1</th>
+                                <th class="tg-031e">...</th>
+                                <th class="tg-031e">i</th>
+                                <th class="tg-031e">...</th>
+                                <th class="tg-yw4l">n</th>
+                                <th class="tg-yw4l">e+1</th>
+                            </tr>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia</h2>
+                        <p style="text-align: left;" class="fragment">
+                            Matriz binaria $M[1,n][1,n]$ donde $M[v][u] = 1$ solo si $adj(G, v, u) = 1$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            Grafos no dirigidos pueden almacenar la mitad de la matriz, a&uacute;n as&iacute; solo es aceptable utilizar esta estructura en grafos densos.
+                        </p>
+
+                    </section>
+                </section>
+                <section>
+                    <h2>&iquest;Qu&eacute; podemos hacer entonces?</h2>
+                    <p style="text-align: left;" class="fragment">
+                        Considerando la entrop&iacute;a del peor caso:
+                    </p>
+                    <p class="fragment">
+                        <span class="fragment highlight-green">
+                            $$ (1 - \alpha)e \cdot log(n) + \mathcal{O}(e)$$
+                        </span>
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        y el espacio utilizado por la lista de adyacencia:
+                    </p>
+                    <p class="fragment">
+                        <span class="fragment highlight-green">
+                            $$e \cdot log(n) + n \cdot log(e)$$
+                        </span>
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Gr&aacute;ficos generales:</h2>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia utilizando BitVector</h2>
+                        <p style="text-align: left;" class="fragment">
+                            Si $e \lt \lt n^2$ utilizamos sparse bitvectors ya que hay $e$ 1s en total.
+                        </p>
+                        <h3 class="fragment">Utilizando very sparse bitvectors</h3>
+                        <p style="text-align: left;" class="fragment">
+                            $M[v]$ tiene $e_v = outdegree(G, v)$ 1s. Requiere $e_v log(\frac{n}{e_v}) + \mathcal{O}(e_v)$ bits.
+                        </p>
+                        <p class="fragment">
+                            $\sum_{v \in V}e_v \cdot log(\frac{n}{e_v}) \leq e \cdot log(\frac{n^2}{e}) + \mathcal{O}(e)$
+                        </p>
+                        <h4 class="fragment">Operaciones</h4>
+                        <p class="fragment">
+                            $adj(G, v, u)$ $ssi$ $access(M[v], u) = 1$
+                        </p>
+                        <p class="fragment">
+                            $neigh(G, v)[j] = select_1(M[v], j)$
+                        </p>
+                        <p class="fragment">
+                            $outdegree(G, v) = rank_1(M[v], n)$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia utilizando BitVector</h2>
+                        <p>
+                            "Interesante" para gr&aacute;fos dirigidos porque alcanza asintoticamente el peor caso de la entrop&iacute;a. Mas all&aacute; de eso, no es buena elecci&oacute;n en la pr&aacute;ctica.
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Utilizando secuencias</h2>
+                        <p style="text-align:left;">
+                            Representaci&oacute;n basada en permutaciones para $N$ y reemplazamos $V$ por un bitvector $B[1, e + n]:$
+                            $$10^{e_1}10^{e_2}1.....0^{e_n}$$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Utilizando secuencias</h2>
+                        <h3>Operaciones</h3>
+                        <p class="fragment">
+                            $outdegree(G, v) = select(B, v + 1) - select(B, v) -1$
+                        </p>
+                        <p class="fragment">
+                            $neigh(G, v)[j] = access(N, select(B, v) - v + j)$
+                        </p>
+                        <p class="fragment">
+                            $adj(G, v, u)$ $ssi$ $rank_u(N, select(B, v + 1) - (v + 1)) - rank_u(N, select(B, v) - v) = 1$
+                        </p>
+                        <h3 class="fragment">Operaciones "Ganadas"</h3>
+                        <p class="fragment">
+                            $indegree(G, v) = rank_v(N, e)$
+                        </p>
+                        <p class="fragment">
+                            $rneigh(G, v)[j] = select_0(B, select_v(N, j)) - select_v(N, j)$
+                        </p>
+                    </section>
+                </section>
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
@@ -537,7 +703,7 @@ Reveal.addEventListener( 'customevent', function() {
                     .enter().append("circle")
                     .attr("class", "node")
                     .attr("r", 15)
-                    .style("fill", function(d) { return color(d.group); })
+                    .style("fill", function(d, i) { return color(d.group); })
                     .call(force.drag);
 
                 node.append("title")
@@ -565,7 +731,7 @@ Reveal.addEventListener( 'customevent', function() {
                     d3.json(name.concat(".json"), function(json) {
                                 load_graph(json, force, graph_svg);});
                 }
-                generate_svg('graph_01', 500, 500);
+                generate_svg('graph_01', 300, 300);
 
 
         </script>
