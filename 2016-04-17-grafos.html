@@ -318,7 +318,11 @@ def adj(G, v, u):
     r_2 = rank<sub>u</sub>(N, succ(B, b + 1) - (v + 1))
     if r_2 - r_1 == 1:
         return True
-    return adj(G, u, v)
+    b = select(B, u)
+    r_1 = rank<sub>v</sub>(N, b - u)
+    r_2 = rank<sub>u</sub>(N, succ(B, b + 1) - (u + 1))
+    return r_2 - r_1 == 1
+
                         </code></pre>
                     </section>
                     <section>
