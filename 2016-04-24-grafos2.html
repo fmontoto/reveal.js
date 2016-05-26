@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Grafos – CC72N Estructuras de Datos Comprimidas</title>
+
+		<meta name="description" content="Estructuras Comprimidas: Grafos">
+		<meta name="author" content="Francisco Montoto">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <style type="text/css">
+            .node {
+                border-radius: 6px;
+                width: 12px;
+                height: 12px;
+                margin: -6px 0 0 -6px;
+                position: absolute;
+            }
+
+            .link {
+                position: absolute;
+                border-bottom: solid #DC0F0F 1px;
+                height: 0;
+                stroke: white;
+                -webkit-transform-origin: 0 0;
+                -moz-transform-origin: 0 0;
+                -ms-transform-origin: 0 0;
+                -o-transform-origin: 0 0;
+                transform-origin: 0 0;
+            }
+        </style>
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Grafos 2.0</h1>
+					<p>
+						<small>Francisco Montoto</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Grafos Etiquetados</h2>
+                    <ul style="text-align:left;">
+                        <li class="fragment">A diferencia de los grafos vistos en la sesi&oacute;n anterior, en un grafo etiquetado las aristas son tripletes $(u, v, l)$ donde diremos que $l$ es su etiqueta. Por simplicidad las etiquetas pertenecen al diccionario $[1, \lambda]$</li>
+
+                        <li class="fragment">Para mantener las mismas operaciones en este nuevo tipo de grafo bastar&iacute;a agregar un arreglo $L[1,e]$ donde $L[i]$ contenga la etiqueta de la arista correspondiente a $N[i]$.</li>
+                        <li class="fragment">Sin embargo, queremos realizar nuevas operaciones para este tipo de grafos.</li>
+                    </ul>
+				</section>
+
+                <section>
+                    <h2>Operaciones Sobre Grafos Etiquetados</h2>
+                    <p style="text-align: left;" class="fragment">
+                        Sea $E_l = \lbrace (v, u), (v, u, l) \in E \rbrace$, definimos entonces $G_l$ como $(V, E_l)$
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        Las operaciones que deseamos efectuar entonces las nombramos como $adj_l$, $neigh_l$, $rneigh_l$, $outdegree_l$ e $indegree_l$. Poseer&aacute;n la misma sem&aacute;ntica que las anteriores operaciones, pero se aplicaran sobre $G_l$.
+                    </p>
+
+				</section>
+                <section>
+                    <h2>Nuevas estructuras</h2>
+                    <p style="text-align: left;" class="fragment">
+                        Agregamos $L[1, e]$
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        Agregamos $B_L$
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        Reemplazamos $N$ por $N_\lambda$
+                    </p>
+                </section>
+                <section>
+                    <h2>Operaciones</h2>
+                    <h4 class="fragment" style="text-align:left;">Se mantienen</h4>
+                    <p class="fragment" style="text-align:left;">
+                        $outdegree(G, v)$: $select(B, v + 1) - select(B, v) -1$
+                    </p>
+                    <p class="fragment" style="text-align:left;">
+                        $indegree(G, v) = rank_v(N, e)$
+                    </p>
+                    <h4 class="fragment" style="text-align:left;">Requieren modificaci&oacute;n</h4>
+
+                    <p class="fragment" style="text-align:left;">
+                        $neigh(G, v)[j]$ <span class="fragment highlight-red">$= access(N, select(B, v) - v + j)$</span><br>
+                    </p>
+                    <p class="fragment">
+                        $\Rightarrow N[select(B_L, l) - l + rank_l(L, p)]$
+                    </p>
+                    <p class="fragment" style="text-align:left;">
+                        $rneigh(G, v)[j] = <span class="fragment highlight-red">select_0(B, select_v(N, j)) - select_v(N, j)$</span>
+                    </p>
+                    <p class="fragment">
+                        $adj(G, v, u)$ $ssi$ $rank_u(N, select(B, v + 1) - (v + 1)) - rank_u(N, select(B, v) - v) = 1$
+                    </p>
+                    <h3 class="fragment">Operaciones "Ganadas"</h3>
+
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$outdegree_l(G, v):$</span> Se mantiene: $|neigh(G, v)|$.
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$adj(G, v, u):$</span> Indica si existe un arco entre v y u; $(v, u) \in E$.
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$neigh(G, v):$</span> Retorna los de vecinos de v; $\lbrace u, (v, u) \in E\rbrace$.
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$rneigh(G, v):$</span> Retorna los vecinos inversos de v; $\lbrace u, (u, v) \in E\rbrace$.
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$indegree(G, v):$</span>Retorna el n&uacute;mero de vecinos inversos de v; $|rneigh(G, v)|$.
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        <span class="fragment highlight-green">$neigh(G,v)[j]$ o $rneigh(G,v)[j]:$</span> Acceso al elemento.
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Grafos no dirigidos</h2>
+                        <p style="text-align: left;" class="fragment">
+                            $(u, v) \in E \Rightarrow (v,u) \in E$. Pero solo uno de los dos se escribe expl&iacute;citamente.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $adj(G, v, u) = adj(G, u, v)$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $neigh(G, u) = rneigh(G, u)$.
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $degree(G, u) = |neigh(G, u)| = |rneigh(G, u)|$.
+                        </p>
+                        <svg class="graph_01"></svg>
+                    </section>
+                </section>
+                <section>
+                    <h2>Entrop&iacute;a</h2>
+                    <p>
+                        <span class="fragment">$log \binom{n^2}{e}$</span>
+                        <span class="fragment">$\approx e \cdot log( \frac{n^2}{e}) + \mathcal{O}(e)$</span>
+                    </p>
+                    <p>
+                        <span class="fragment">Si hacemos $e = n^{1 + \alpha}, \alpha \in ]0,1[$</span>
+                        <br>
+                        <span class="fragment">$= (1 - \alpha)e \cdot log(n) + \mathcal{O}(e)$</span>
+                    </p>
+
+                </section>
+                <section>
+                    <section>
+                        <h2>Representaciones "Cl&aacute;sicas"</h2>
+                        <h3 class="fragment" style="text-align:left;">Lista de adyacencia</h3>
+                        <p style="text-align: left;" class="fragment">
+                            Asumamos $V = [1,n]$
+                        </p>
+
+                        <p class="fragment">
+                            $1 \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                        <p class="fragment">
+                            ...
+                            <br>
+                            $i \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                        <p class="fragment">
+                            ...
+                            <br>
+                            $n \Rightarrow vecino[1] \rightarrow vecino[i] \rightarrow vecino[e]$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Lista de adyacencia</h2>
+                        <p style="text-align: left;" class="fragment">
+                            $N[1,e]:$
+                        </p>
+                        <style type="text/css">
+                            .fragment-t.fragment {border-collapse:collapse;border-spacing:0;}
+                            .fragment-t th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+                            .fragment-t tr{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;}
+                            .tg .tg-yw4l{vertical-align:top}
+                        </style>
+                        <table class="fragment fragment-t">
+                            <tr>
+                                <th class="tg-031e">N(1)[0]</th>
+                                <th class="tg-031e">N(1)[1]</th>
+                                <th class="tg-031e">N(1)[...]</th>
+                                <th class="tg-031e">N(...)[...]</th>
+                                <th class="tg-yw4l">N(i)[0]</th>
+                                <th class="tg-yw4l">N(i)[...]</th>
+                                <th class="tg-yw4l">N(n)[0]</th>
+                                <th class="tg-yw4l">N(n)[...]</th>
+                            </tr>
+                        </table>
+                        <p style="text-align: left;" class="fragment">
+                            $V[1,n+1]:$
+                        </p>
+                        <table class="fragment fragment-t">
+                            <tr>
+                                <th class="tg-031e">1</th>
+                                <th class="tg-031e">...</th>
+                                <th class="tg-031e">i</th>
+                                <th class="tg-031e">...</th>
+                                <th class="tg-yw4l">n</th>
+                                <th class="tg-yw4l">e+1</th>
+                            </tr>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia</h2>
+                        <p style="text-align: left;" class="fragment">
+                            Matriz binaria $M[1,n][1,n]$ donde $M[v][u] = 1$ solo si $adj(G, v, u) = 1$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            Grafos no dirigidos pueden almacenar la mitad de la matriz, a&uacute;n as&iacute; solo es aceptable utilizar esta estructura en grafos densos.
+                        </p>
+
+                    </section>
+                </section>
+                <section>
+                    <h2>&iquest;Qu&eacute; podemos hacer entonces?</h2>
+                    <p style="text-align: left;" class="fragment">
+                        Considerando la entrop&iacute;a del peor caso:
+                    </p>
+                    <p class="fragment">
+                        <span class="fragment highlight-green">
+                            $$ (1 - \alpha)e \cdot log(n) + \mathcal{O}(e)$$
+                        </span>
+                    </p>
+                    <p style="text-align: left;" class="fragment">
+                        y el espacio utilizado por la lista de adyacencia:
+                    </p>
+                    <p class="fragment">
+                        <span class="fragment highlight-green">
+                            $$e \cdot log(n) + n \cdot log(e)$$
+                        </span>
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Grafos generales:</h2>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia utilizando BitVector</h2>
+                        <p style="text-align: left;" class="fragment">
+                            Si $e \lt \lt n^2$ utilizamos sparse bitvectors ya que hay $e$ 1s en total.
+                        </p>
+                        <h3 class="fragment">Utilizando very sparse bitvectors</h3>
+                        <p style="text-align: left;" class="fragment">
+                            $M[v]$ tiene $e_v = outdegree(G, v)$ 1s. Requiere $e_v log(\frac{n}{e_v}) + \mathcal{O}(e_v)$ bits.
+                        </p>
+                        <p class="fragment">
+                            $\sum_{v \in V}e_v \cdot log(\frac{n}{e_v}) \leq e \cdot log(\frac{n^2}{e}) + \mathcal{O}(e)$
+                        </p>
+                        <h4 class="fragment">Operaciones</h4>
+                        <p class="fragment">
+                            $adj(G, v, u)$ $ssi$ $access(M[v], u) = 1$
+                        </p>
+                        <p class="fragment">
+                            $neigh(G, v)[j] = select_1(M[v], j)$
+                        </p>
+                        <p class="fragment">
+                            $outdegree(G, v) = rank_1(M[v], n)$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Matriz de adyacencia utilizando BitVector</h2>
+                        <p>
+                            "Interesante" para gr&aacute;fos dirigidos porque alcanza asintoticamente el peor caso de la entrop&iacute;a. Mas all&aacute; de eso, no es buena elecci&oacute;n en la pr&aacute;ctica.
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Utilizando secuencias</h2>
+                        <p style="text-align:left;">
+                            Representaci&oacute;n basada en permutaciones para $N$ y reemplazamos $V$ por un bitvector $B[1, e + n]:$
+                            $$10^{e_1}10^{e_2}1.....0^{e_n}$$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Utilizando secuencias</h2>
+                        <h3>Operaciones</h3>
+                        <p class="fragment">
+                            $outdegree(G, v) = select(B, v + 1) - select(B, v) -1$
+                        </p>
+                        <p class="fragment">
+                            $neigh(G, v)[j] = access(N, select(B, v) - v + j)$
+                        </p>
+                        <p class="fragment">
+                            $adj(G, v, u)$ $ssi$ $rank_u(N, select(B, v + 1) - (v + 1)) - rank_u(N, select(B, v) - v) = 1$
+                        </p>
+                        <h3 class="fragment">Operaciones "Ganadas"</h3>
+                        <p class="fragment">
+                            $indegree(G, v) = rank_v(N, e)$
+                        </p>
+                        <p class="fragment">
+                            $rneigh(G, v)[j] = select_0(B, select_v(N, j)) - select_v(N, j)$
+                        </p>
+                    </section>
+
+                    <section>
+                        <p>
+                            Otra ventaja de esta estructura es la de poder representar grafos no dirigidos sin doblar la cantidad de arcos. Para almacenar grafos no dirigidos cambiaremos ligeramente el como se ejecutan las operaciones.
+                        </p>
+
+                        <ul style="text-align:left;">
+                            <li class="fragment">Cada arco $(v, u)$ se almacena una vez. No insertamos $(u, v)$</li>
+                            <li class="fragment">$neigh(G, v)[j]$ retorna el j-&eacute;simo vecino si $j \leq e_v = outdegree(G, v)$. De lo contrario, retorna el (j - $e_v$)-&eacute;simo vecino reverso.</li>
+                            <li class="fragment">Si hay arcos que se originan y terminan en el mismo nodo se deben manejar por separado,por ejemplo en un bitarray $S[1,n]$ donde $S[v]$ es $1$ si y solo si $(v, v) \in E$.</li>
+
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Operaciones sobre grafos no dirigidos generales.</h3>
+                        <pre><code class="hljs" data-noescape data-trim contenteditable>
+def adj(G, v, u):
+    if v == u:
+        return bitread(S, v) == 1
+    b = select(B, v)
+    r_1 = rank<sub>u</sub>(N, b - v)
+    r_2 = rank<sub>u</sub>(N, succ(B, b + 1) - (v + 1))
+    if r_2 - r_1 == 1:
+        return True
+    b = select(B, u)
+    r_1 = rank<sub>v</sub>(N, b - u)
+    r_2 = rank<sub>u</sub>(N, succ(B, b + 1) - (u + 1))
+    return r_2 - r_1 == 1
+
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Operaciones sobre grafos no dirigidos generales.</h3>
+                        <p>Se asume $j \leq degree(G, v)$</p>
+                        <pre><code class="hljs" data-noescape data-trim contenteditable>
+def neigh(G, v, j):
+    if bitread(S, v) == 1:
+        if j == 1:
+            return v
+        j = j - 1
+    b = select(B, v)
+    d = succ(B, b + 1) - b - 1
+    if j &#8804; d:
+        return access(N, b + j)
+    p = select<sub>v</sub>(N, j - d)
+    return select<sub>0</sub>(B, p) - p
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Operaciones sobre grafos no dirigidos generales.</h3>
+                        <pre><code class="hljs" data-noescape data-trim contenteditable>
+def degree(G, v):
+    if bitread(S, v) == 1:
+        s = 1
+    else:
+        s = 0
+    b = select(B, v)
+    return s + (succ(B, b + 1) - b - 1) + rank<sub>v</sub>(N, e)
+                        </code></pre>
+                    </section>
+                </section>
+				<section>
+					<h2>Pr&oacute;xima sesi&oacute;n</h2>
+					<p class="fragment">
+						Grafos etiquetados
+					</p>
+					<p class="fragment">
+                        Grafos agrupados <i>(Clustered graph)</i>
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Latex
+                math: {
+                    mathjax: 'lib/js/MathJax.js',
+                    //mathjax: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                    config: 'TeX-AMS_HTML-full'
+                },
+
+
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/math/math.js', async: true}
+				]
+			});
+
+        </script>
+        <script src="lib/js/d3/d3.min.js"></script>
+
+        <script type="text/javascript">
+            // Generates the graphs
+
+            function load_graph(json, force, svg) {
+                var color = d3.scale.category20();
+                // define arrow markers for graph links
+                svg.append('svg:defs').append('svg:marker')
+                    .attr('id', 'end-arrow')
+                    .attr('viewBox', '-5 -5 10 10')
+                    .attr('refX', 6)
+                    .attr('markerWidth', 3)
+                    .attr('markerHeight', 3)
+                    .attr('orient', 'auto')
+                    .append('svg:path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#000');
+
+                svg.append('svg:defs')
+                    .append('svg:marker')
+                    .attr('id', 'start-arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 4)
+                    .attr('markerWidth', 3)
+                    .attr('markerHeight', 3)
+                    .attr('orient', 'auto')
+                    .append('svg:path')
+                        .attr('d', 'M10,-5L0,0L10,5')
+                        .attr('fill', 'red');
+
+                force.nodes(json.nodes)
+                    .links(json.links)
+                    .start();
+
+                var link = svg.selectAll("line.link")
+                    .data(json.links)
+                    .enter().append("line")
+                    .attr("class", "link")
+                    .style("stroke-width", function(d, i) { return Math.sqrt(d.value)})
+                    .style('marker-start', function(d, i) { return 'url(#start-arrow)'});
+
+                var node = svg.selectAll("circle.node")
+                    .data(json.nodes)
+                    .enter().append("circle")
+                    .attr("class", "node")
+                    .attr("r", 15)
+                    .style("fill", function(d, i) { return color(d.group); })
+                    .call(force.drag);
+
+                node.append("title")
+                    .text(function(d) { return d.name; });
+
+
+                force.on("tick", function() {
+                    link.attr("x1", function(d) { return d.source.x; })
+                        .attr("y1", function(d) { return d.source.y; })
+                        .attr("x2", function(d) { return d.target.x; })
+                        .attr("y2", function(d) { return d.target.y; });
+
+                    node.attr("cx", function(d) { return d.x; })
+                        .attr("cy", function(d) { return d.y; });
+
+                });
+            };
+                function generate_svg(name, width, height) {
+                    var graph_svg = d3.select(".".concat(name)).attr("width", width).attr("height", height);
+                    var force = d3.layout.force()
+                                        .charge(-190)
+                                        .linkDistance(90)
+                                        .linkStrength(1)
+                                        .size([width, height]);
+                    d3.json(name.concat(".json"), function(json) {
+                                load_graph(json, force, graph_svg);});
+                }
+                generate_svg('graph_01', 300, 300);
+
+
+        </script>
+
+	</body>
+</html>
