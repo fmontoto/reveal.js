@@ -107,11 +107,14 @@
                     <h2>Operaciones</h2>
                     <h4 class="fragment" style="text-align:left;">Se mantienen</h4>
                     <p class="fragment" style="text-align:left;">
-                        $outdegree(G, v)$: $select(B, v + 1) - select(B, v) -1$
+                        $outdegree(G, v): select(B, v + 1) - select(B, v) -1$
                     </p>
                     <p class="fragment" style="text-align:left;">
                         $indegree(G, v) = rank_v(N, e)$
                     </p>
+                </section>
+                <section>
+                    <h2>Operaciones</h2>
                     <h4 class="fragment" style="text-align:left;">Requieren modificaci&oacute;n</h4>
 
                     <p class="fragment" style="text-align:left;">
@@ -121,31 +124,67 @@
                         $\Rightarrow N[select(B_L, l) - l + rank_l(L, p)]$
                     </p>
                     <p class="fragment" style="text-align:left;">
-                        $rneigh(G, v)[j] = <span class="fragment highlight-red">select_0(B, select_v(N, j)) - select_v(N, j)$</span>
+                        $rneigh(G, v)[j]$ = <span class="fragment highlight-red">$select_0(B, select_v(N, j)) - select_v(N, j)$</span>
                     </p>
                     <p class="fragment">
-                        $adj(G, v, u)$ $ssi$ $rank_u(N, select(B, v + 1) - (v + 1)) - rank_u(N, select(B, v) - v) = 1$
+                        $\Rightarrow N[select_0(B, s) - s]$
                     </p>
-                    <h3 class="fragment">Operaciones "Ganadas"</h3>
-
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$outdegree_l(G, v):$</span> Se mantiene: $|neigh(G, v)|$.
+                    <p class="fragment" style="text-align:left;">
+                        $adj(G, v, u)$ <span class="fragment highlight-red">$ssi$ $rank_u(N, select(B, v + 1) - (v + 1)) - rank_u(N, select(B, v) - v) = 1$</span>
                     </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$adj(G, v, u):$</span> Indica si existe un arco entre v y u; $(v, u) \in E$.
+                    <p class="fragment">
+                        $\Rightarrow \bigvee\limits_{l \in [1, \lambda]} adj_l(G, v, u)$
                     </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$neigh(G, v):$</span> Retorna los de vecinos de v; $\lbrace u, (v, u) \in E\rbrace$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$rneigh(G, v):$</span> Retorna los vecinos inversos de v; $\lbrace u, (u, v) \in E\rbrace$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$indegree(G, v):$</span>Retorna el n&uacute;mero de vecinos inversos de v; $|rneigh(G, v)|$.
-                    </p>
-                    <p style="text-align: left;" class="fragment">
-                        <span class="fragment highlight-green">$neigh(G,v)[j]$ o $rneigh(G,v)[j]:$</span> Acceso al elemento.
-                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Operaciones etiquetadas</h2>
+                        <p style="text-align: left;" class="fragment">
+                            Sean $p_1$ y $p_2$ los l&iacute;imtes del &aacute;rea $neigh(v): L[p_1 + 1, p_2]$
+                        </p>
+                        <p class="fragment">
+                            $p_1 = select(B, v) - v, \qquad p_2 = select(B, v + 1) - (v + 1)$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            Definimos como $r_1$ y $r_2$ los l&iacute;mites del &aacute;rea $N_l: N[r_1 + 1, r_2]$
+                        </p>
+                        <p class="fragment">
+                            $r_1 = select(B_L, l) - l, \qquad r_2 = select(B_L, l + 1) - (l + 1)$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            Por &uacute;ltimo, sea $N[r_1 + q_1 + 1, r_1 + q_2]$ el &aacute;rea de $neigh_l(v)$ con:
+                        </p>
+                        <p class="fragment">
+                            $q_1 = rank_l(L, p_1), \qquad q_2 = rank_l(L, p_2)$
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Operaciones etiquetadas</h2>
+                        <p>
+                            $p_1 = select(B, v) - v, \qquad p_2 = select(B, v + 1) - (v + 1)$
+                        </p>
+                        <p>
+                            $r_1 = select(B_L, l) - l, \qquad r_2 = select(B_L, l + 1) - (l + 1)$
+                        </p>
+                        <p>
+                            $q_1 = rank_l(L, p_1), \qquad q_2 = rank_l(L, p_2)$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $outdegree_l(G, v) = q_2 - q_1$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $neigh_l(G, v)[j] = N[r_1 + q_1 + j]$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $indegree_l(G, v) = rank_v(N, r_2) - rank_v(N, r_1)$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            $adj_l(G, v, u)$ ssi $rank_u(N, r_1 + q_2) - rank_u(N, r_1 + q_1) = 1$
+                        </p>
+                        <p style="text-align: left;" class="fragment">
+                            Posici&oacute;n de $rneigh_l(G, v)[j] = select_v(N, rank_v(N, r_1) + j)$
+                        </p>
+                    </section>
                 </section>
                 <section>
                     <section>
