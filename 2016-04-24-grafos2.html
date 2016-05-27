@@ -244,7 +244,7 @@ def creport(p, r, c<sub>0</sub>, s, ret):
     else:
         l = s/k
         r<sub>l</sub> = ceil(r/l)
-        r = r - l(r<sub>1</sub>) - 1)
+        r = r - l(r<sub>1</sub> - 1)
         for c in range(1, k):
             if childrenlabeled(T, p, (c - 1)k + r<sub>l</sub>:
                 creport(labeledchild(T, p, (c - 1)k + r<sub>l</sub>),
@@ -268,7 +268,7 @@ def rreport(p, c, r<sub>0</sub>, s, ret):
     else:
         l = s/k
         c<sub>l</sub> = ceil(c/l)
-        c = c - l(c<sub>1</sub>) - 1)
+        c = c - l(c<sub>1</sub> - 1)
         for r in range(1, k):
             if childrenlabeled(T, p, (c<sub>l</sub> - 1)k + r:
                 rreport(labeledchild(T, p, (c<sub>l</sub> - 1)k + r),
